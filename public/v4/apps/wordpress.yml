@@ -23,6 +23,15 @@ services:
             WORDPRESS_DB_HOST: srv-captain--$$cap_appname-db:3306
             WORDPRESS_DB_USER: $$cap_db_user
             WORDPRESS_DB_PASSWORD: $$cap_db_pass
+    $$cap_appname-wpcli:
+        image: wordpress:cli
+        volumes:
+            - $$cap_appname-wp-data:/var/www/html
+        depends_on:
+            - $$cap_appname-wp-data
+            - $$cap_appname-db 
+        caproverExtra:
+            notExposeAsWebApp: 'true'
 caproverOneClickApp:
     variables:
         - id: $$cap_db_user
@@ -57,7 +66,7 @@ caproverOneClickApp:
             Wordpress is deployed and available as $$cap_appname-wordpress . 
 
             IMPORTANT: It will take up to 2 minutes for WordPress to be ready. Before that, you might see a 502 error page.
-    displayName: WordPress
-    isOfficial: true
+    displayName: WordPress (inkl. wpcli)
+    isOfficial: false
     description: WordPress is a content management system based on PHP and MySQL that is usually used with the MySQL or MariaDB database
     documentation: Taken from https://docs.docker.com/compose/wordpress/. Port mapping removed from WP as it is no longer needed
